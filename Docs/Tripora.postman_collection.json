@@ -1,0 +1,3075 @@
+{
+	"info": {
+		"_postman_id": "0b035486-4ab1-4cfd-9b46-f4cb53658b1f",
+		"name": "Tripora",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "47224073",
+		"_collection_link": "https://adwaithats01-3270211.postman.co/workspace/Adwaitha's-Workspace~8dc3ccf1-5a37-411e-88c6-a779fec8bc59/collection/50659285-0b035486-4ab1-4cfd-9b46-f4cb53658b1f?action=share&source=collection_link&creator=47224073"
+	},
+	"item": [
+		{
+			"name": "Healthcheck",
+			"item": [
+				{
+					"name": "Healthcheck",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Tripora}}/",
+							"host": [
+								"{{Tripora}}"
+							],
+							"path": [
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Touristsignup",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"full_name\": \"Nina Fernandez\",\n  \"email\": \"nina.fernandez@tripora.com\",\n  \"password\": \"Nina@Travel2025!\",\n  \"country\": \"Spain\",\n  \"preferred_language\": \"Spanish\"\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Tripora}}/auth/tourist/signup",
+							"host": [
+								"{{Tripora}}"
+							],
+							"path": [
+								"auth",
+								"tourist",
+								"signup"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200 OK', function () {",
+									"    pm.response.to.have.status(200);",
+									"})",
+									"",
+									"pm.test('Response contains access_token and refresh_token', function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('access_token');",
+									"    pm.expect(jsonData).to.have.property('refresh_token');",
+									"    pm.expect(jsonData.access_token).to.be.a('string').and.not.empty;",
+									"    pm.expect(jsonData.refresh_token).to.be.a('string').and.not.empty;",
+									"})",
+									"",
+									"pm.test('Response contains user information', function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('user');",
+									"    pm.expect(jsonData.user).to.have.property('id');",
+									"    pm.expect(jsonData.user).to.have.property('email');",
+									"    pm.expect(jsonData.user).to.have.property('role');",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"admin@tripora.com\",\n  \"password\": \"admin123\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Tripora}}/auth/login",
+							"host": [
+								"{{Tripora}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Refresh Token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200 OK', function () {",
+									"    pm.response.to.have.status(200);",
+									"})",
+									"",
+									"pm.test('Response contains new access_token', function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('access_token');",
+									"    pm.expect(jsonData.access_token).to.be.a('string').and.not.empty;",
+									"})",
+									"",
+									"pm.test('New access token is different from old token', function () {",
+									"    const jsonData = pm.response.json();",
+									"    const oldToken = pm.collectionVariables.get('Guide_Accesstoken');",
+									"    pm.expect(jsonData.access_token).to.not.eql(oldToken);",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"refresh_token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3Njc2MzEzMTcsInR5cGUiOiJyZWZyZXNoIn0.GaQrDUKgah5zq6oDPkTnVBqePB7VNjA9-5HiHMCbkYE\"\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://0.0.0.0:8000/auth/refresh",
+							"protocol": "http",
+							"host": [
+								"0",
+								"0",
+								"0",
+								"0"
+							],
+							"port": "8000",
+							"path": [
+								"auth",
+								"refresh"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Guide signup",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 201 Created', function () {",
+									"    pm.response.to.have.status(201);",
+									"})",
+									"",
+									"pm.test('Response has user object', function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('user');",
+									"    pm.expect(jsonData.user).to.have.property('id');",
+									"    pm.expect(jsonData.user).to.have.property('email');",
+									"    pm.expect(jsonData.user).to.have.property('role');",
+									"})",
+									"",
+									"pm.test('User role is guide', function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData.user.role).to.eql('guide');",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"full_name\": \"Prakash Balakrishnan\",\n  \"email\": \"prakash.b@tripora.com\",\n  \"password\": \"Prakash@789\",\n  \"phone\": \"9087654321\",\n  \"address\": \"Palakkad, Kerala\"\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://0.0.0.0:8000/auth/guide/signup",
+							"protocol": "http",
+							"host": [
+								"0",
+								"0",
+								"0",
+								"0"
+							],
+							"port": "8000",
+							"path": [
+								"auth",
+								"guide",
+								"signup"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Logout",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"refresh_token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3Njc1ODU1NzMsInR5cGUiOiJyZWZyZXNoIn0.CLtCBDQM1VTF2iE3Y88XkCkrZW8CJJMzVhZ0uKyK-hs\"\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://0.0.0.0:8000/auth/logout",
+							"protocol": "http",
+							"host": [
+								"0",
+								"0",
+								"0",
+								"0"
+							],
+							"port": "8000",
+							"path": [
+								"auth",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Admin features",
+			"item": [
+				{
+					"name": "Guide Approval",
+					"item": [
+						{
+							"name": "Approve or Reject guide",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"approve\": {{status}}\n}\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{Tripora}}/users/guides/{{guide_id}}/approval",
+									"host": [
+										"{{Tripora}}"
+									],
+									"path": [
+										"users",
+										"guides",
+										"{{guide_id}}",
+										"approval"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get all pending guides",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{Tripora}}/users/guides/pending",
+									"host": [
+										"{{Tripora}}"
+									],
+									"path": [
+										"users",
+										"guides",
+										"pending"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{Admin Accesstoken}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Heritage Management",
+			"item": [
+				{
+					"name": "Admin Management",
+					"item": [
+						{
+							"name": "Approve Heritage",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('Status code is 200 OK', function () {",
+											"    pm.response.to.have.status(200);",
+											"})",
+											"",
+											"pm.test('Response contains updated heritage', function () {",
+											"    const jsonData = pm.response.json();",
+											"    pm.expect(jsonData).to.have.property('id');",
+											"    pm.expect(jsonData).to.have.property('is_active');",
+											"})",
+											"",
+											"pm.test('Heritage is_active is now true (approved)', function () {",
+											"    const jsonData = pm.response.json();",
+											"    pm.expect(jsonData.is_active).to.be.true;",
+											"})",
+											"",
+											"pm.test('Heritage ID matches the one being approved', function () {",
+											"    const jsonData = pm.response.json();",
+											"    const heritageId = pm.collectionVariables.get('heritage_id');",
+											"    pm.expect(jsonData.id).to.eql(heritageId);",
+											"})"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"url": {
+									"raw": "{{Tripora}}/heritage/{{heritage_id}}/approve",
+									"host": [
+										"{{Tripora}}"
+									],
+									"path": [
+										"heritage",
+										"{{heritage_id}}",
+										"approve"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Disable Heritages",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"url": {
+									"raw": "{{Tripora}}/heritage/{{heritage_id}}/disable",
+									"host": [
+										"{{Tripora}}"
+									],
+									"path": [
+										"heritage",
+										"{{heritage_id}}",
+										"disable"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Soft Delete Heritage",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"url": {
+									"raw": "{{Tripora}}/heritage/{{HERITAGE_ID}}/delete",
+									"host": [
+										"{{Tripora}}"
+									],
+									"path": [
+										"heritage",
+										"{{HERITAGE_ID}}",
+										"delete"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Single Heritage View Admin-(After Delete)",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{Tripora}}/heritage/{{HERITAGE_ID}}",
+									"host": [
+										"{{Tripora}}"
+									],
+									"path": [
+										"heritage",
+										"{{HERITAGE_ID}}"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"auth": {
+						"type": "bearer",
+						"bearer": [
+							{
+								"key": "token",
+								"value": "{{Admin Accesstoken}}",
+								"type": "string"
+							}
+						]
+					},
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {},
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {},
+								"exec": [
+									""
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "Guide Management",
+					"item": [
+						{
+							"name": "Create Heritage (Guide)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('Status code is 201 Created', function () {",
+											"    pm.response.to.have.status(201);",
+											"})",
+											"",
+											"pm.test('Response contains heritage object', function () {",
+											"    const jsonData = pm.response.json();",
+											"    pm.expect(jsonData).to.have.property('id');",
+											"    pm.expect(jsonData).to.have.property('name');",
+											"    pm.expect(jsonData).to.have.property('description');",
+											"    pm.expect(jsonData).to.have.property('is_active');",
+											"    pm.expect(jsonData).to.have.property('is_deleted');",
+											"})",
+											"",
+											"pm.test('Heritage is_active is false (pending approval)', function () {",
+											"    const jsonData = pm.response.json();",
+											"    pm.expect(jsonData.is_active).to.be.false;",
+											"})",
+											"",
+											"pm.test('Heritage is_deleted is false', function () {",
+											"    const jsonData = pm.response.json();",
+											"    pm.expect(jsonData.is_deleted).to.be.false;",
+											"})",
+											"",
+											"pm.test('Heritage has guide_id matching logged-in guide', function () {",
+											"    const jsonData = pm.response.json();",
+											"    const guideUserId = pm.collectionVariables.get('guide_user_id');",
+											"    pm.expect(jsonData.guide_id).to.eql(guideUserId);",
+											"})"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"Padmanabhapuram Palace\",\n  \"description\": \"A well-preserved wooden palace complex reflecting traditional Kerala architecture\",\n  \"location_map\": \"https://maps.google.com/?q=Padmanabhapuram+Palace\",\n  \"short_description\": \"Largest wooden palace in India\",\n  \"historical_overview\": \"Built in the 16th century as the seat of the Travancore rulers.\",\n  \"cultural_significance\": \"Showcases exquisite woodwork, murals, and the royal heritage of Travancore.\",\n  \"best_time_to_visit\": \"October to February\"\n}\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{Tripora}}/heritage",
+									"host": [
+										"{{Tripora}}"
+									],
+									"path": [
+										"heritage"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Add Photo(Guide)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('Status code is 200 or 201', function () {",
+											"    pm.expect(pm.response.code).to.be.oneOf([",
+											"        200,",
+											"        201",
+											"    ]);",
+											"})",
+											"",
+											"pm.test('Response confirms photo was added', function () {",
+											"    const jsonData = pm.response.json();",
+											"    pm.expect(jsonData).to.have.property('photo_url').or.to.have.property('url').or.to.have.property('id');",
+											"})",
+											"",
+											"pm.test('Photo belongs to correct heritage', function () {",
+											"    const jsonData = pm.response.json();",
+											"    const heritageId = pm.collectionVariables.get('heritage_id');",
+											"    pm.expect(jsonData.heritage_id).to.eql(heritageId);",
+											"})"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"image_url\": \"https://example.com/padmanabhapuram_palace_1.jpg\"\n}\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{Tripora}}/heritage/{{heritage_id}}/photos",
+									"host": [
+										"{{Tripora}}"
+									],
+									"path": [
+										"heritage",
+										"{{heritage_id}}",
+										"photos"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Add Safety Rule(Guide)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('Status code is 200 or 201', function () {",
+											"    pm.expect(pm.response.code).to.be.oneOf([",
+											"        200,",
+											"        201",
+											"    ]);",
+											"})",
+											"",
+											"pm.test('Response confirms safety rule was added', function () {",
+											"    const jsonData = pm.response.json();",
+											"    pm.expect(jsonData).to.have.property('rule').or.to.have.property('description').or.to.have.property('id');",
+											"})",
+											"",
+											"pm.test('Safety rule belongs to correct heritage', function () {",
+											"    const jsonData = pm.response.json();",
+											"    const heritageId = pm.collectionVariables.get('heritage_id');",
+											"    pm.expect(jsonData.heritage_id).to.eql(heritageId);",
+											"})"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"rule_text\": \"Visitors must follow designated pathways and avoid restricted areas\"\n}\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{Tripora}}/heritage/{{heritage_id}}/rules",
+									"host": [
+										"{{Tripora}}"
+									],
+									"path": [
+										"heritage",
+										"{{heritage_id}}",
+										"rules"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Generate QR Code (Guide)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('Status code is 200 or 201', function () {",
+											"    pm.expect(pm.response.code).to.be.oneOf([",
+											"        200,",
+											"        201",
+											"    ]);",
+											"})",
+											"",
+											"pm.test('Response contains QR code data', function () {",
+											"    const jsonData = pm.response.json();",
+											"    pm.expect(jsonData).to.have.property('qr_code').or.to.have.property('qr_url').or.to.have.property('qr_data');",
+											"})",
+											"",
+											"pm.test('QR code is for correct heritage', function () {",
+											"    const jsonData = pm.response.json();",
+											"    const heritageId = pm.collectionVariables.get('heritage_id');",
+											"    pm.expect(jsonData.heritage_id).to.eql(heritageId);",
+											"})"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{Tripora}}/heritage/{{heritage_id}}/qr",
+									"host": [
+										"{{Tripora}}"
+									],
+									"path": [
+										"heritage",
+										"{{heritage_id}}",
+										"qr"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update Heritage(guide)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('Status code is 200 OK', function () {",
+											"    pm.response.to.have.status(200);",
+											"})",
+											"",
+											"pm.test('Response contains updated heritage data', function () {",
+											"    const jsonData = pm.response.json();",
+											"    pm.expect(jsonData).to.have.property('id');",
+											"    pm.expect(jsonData).to.have.property('name');",
+											"    pm.expect(jsonData).to.have.property('description');",
+											"})",
+											"",
+											"pm.test('Heritage ID matches the one being updated', function () {",
+											"    const jsonData = pm.response.json();",
+											"    const heritageId = pm.collectionVariables.get('heritage_id');",
+											"    pm.expect(jsonData.id).to.eql(heritageId);",
+											"})",
+											"",
+											"pm.test('Update was successful', function () {",
+											"    pm.response.to.be.ok;",
+											"    pm.response.to.be.json;",
+											"})"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"Padmanabhapuram Palace Heritage\",\n  \"description\": \"Updated description for palace heritage\",\n  \"location_map\": \"https://maps.google.com/?q=Padmanabhapuram+Palace+Kerala\",\n  \"short_description\": \"Historic wooden palace complex\",\n  \"historical_overview\": \"Updated historical overview content\",\n  \"cultural_significance\": \"Updated cultural importance details\",\n  \"best_time_to_visit\": \"November to March\"\n}\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{Tripora}}/heritage/{{heritage_id}}",
+									"host": [
+										"{{Tripora}}"
+									],
+									"path": [
+										"heritage",
+										"{{heritage_id}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Single Heritage View(Public(Before Approval))",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{Tripora}}/heritage/{{HERITAGE_ID}}",
+									"host": [
+										"{{Tripora}}"
+									],
+									"path": [
+										"heritage",
+										"{{HERITAGE_ID}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Single Heritage View(Public(After Approval))",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('Status code is 200 OK', function () {",
+											"    pm.response.to.have.status(200);",
+											"})",
+											"",
+											"pm.test('Response contains complete heritage data', function () {",
+											"    const jsonData = pm.response.json();",
+											"    pm.expect(jsonData).to.have.property('id');",
+											"    pm.expect(jsonData).to.have.property('name');",
+											"    pm.expect(jsonData).to.have.property('description');",
+											"    pm.expect(jsonData).to.have.property('is_active');",
+											"})",
+											"",
+											"pm.test('Heritage is active and visible to public', function () {",
+											"    const jsonData = pm.response.json();",
+											"    pm.expect(jsonData.is_active).to.be.true;",
+											"})",
+											"",
+											"pm.test('Heritage is not deleted', function () {",
+											"    const jsonData = pm.response.json();",
+											"    pm.expect(jsonData.is_deleted).to.be.false;",
+											"})",
+											"",
+											"pm.test('Heritage has photos array', function () {",
+											"    const jsonData = pm.response.json();",
+											"    pm.expect(jsonData).to.have.property('photos');",
+											"    pm.expect(jsonData.photos).to.be.an('array');",
+											"})",
+											"",
+											"pm.test('Heritage has safety rules array', function () {",
+											"    const jsonData = pm.response.json();",
+											"    pm.expect(jsonData).to.have.property('safety_rules').or.to.have.property('rules');",
+											"})"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{Tripora}}/heritage/{{HERITAGE_ID}}",
+									"host": [
+										"{{Tripora}}"
+									],
+									"path": [
+										"heritage",
+										"{{HERITAGE_ID}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "List Heritage (Public)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Tripora}}/heritage",
+							"host": [
+								"{{Tripora}}"
+							],
+							"path": [
+								"heritage"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{Guide_Accesstoken}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Event Management",
+			"item": [
+				{
+					"name": "Guide Management",
+					"item": [
+						{
+							"name": "Create Event (Guide)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('Status code is 201 Created', function () {",
+											"    pm.response.to.have.status(201);",
+											"})",
+											"",
+											"pm.test('Response contains event object', function () {",
+											"    const jsonData = pm.response.json();",
+											"    pm.expect(jsonData).to.have.property('id');",
+											"    pm.expect(jsonData).to.have.property('title').or.to.have.property('name');",
+											"    pm.expect(jsonData).to.have.property('heritage_id');",
+											"    pm.expect(jsonData).to.have.property('is_active');",
+											"})",
+											"",
+											"pm.test('Event is active by default', function () {",
+											"    const jsonData = pm.response.json();",
+											"    pm.expect(jsonData.is_active).to.be.true;",
+											"})",
+											"",
+											"pm.test('Event belongs to correct heritage', function () {",
+											"    const jsonData = pm.response.json();",
+											"    const heritageId = pm.collectionVariables.get('heritage_id');",
+											"    pm.expect(jsonData.heritage_id).to.eql(heritageId);",
+											"})",
+											"",
+											"pm.test('Event has guide_id matching logged-in guide', function () {",
+											"    const jsonData = pm.response.json();",
+											"    const guideUserId = pm.collectionVariables.get('guide_user_id');",
+											"    pm.expect(jsonData.guide_id).to.eql(guideUserId);",
+											"})"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"heritage_id\": \"70e8d902-dc41-4b7c-a172-dd6f2cf59a3e\",\n  \"title\": \"Sunset Heritage Walk\",\n  \"description\": \"Guided walk explaining the history and architecture of the site\",\n  \"event_date\": \"2025-12-30\",\n  \"start_time\": \"17:00:00\",\n  \"end_time\": \"18:30:00\",\n  \"event_type\": \"notice\"\n}\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{Tripora}}/events",
+									"host": [
+										"{{Tripora}}"
+									],
+									"path": [
+										"events"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update Event(Guide - Own Event)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('Status code is 200 OK', function () {",
+											"    pm.response.to.have.status(200);",
+											"})",
+											"",
+											"pm.test('Response contains updated event data', function () {",
+											"    const jsonData = pm.response.json();",
+											"    pm.expect(jsonData).to.have.property('id');",
+											"    pm.expect(jsonData).to.have.property('title').or.to.have.property('name');",
+											"})",
+											"",
+											"pm.test('Event ID matches the one being updated', function () {",
+											"    const jsonData = pm.response.json();",
+											"    const eventId = pm.collectionVariables.get('event_id');",
+											"    pm.expect(jsonData.id).to.eql(eventId);",
+											"})",
+											"",
+											"pm.test('Event still belongs to the guide', function () {",
+											"    const jsonData = pm.response.json();",
+											"    const guideUserId = pm.collectionVariables.get('guide_user_id');",
+											"    pm.expect(jsonData.guide_id).to.eql(guideUserId);",
+											"})"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"title\": \"Sunset Heritage Walk (Revised)\",\n  \"description\": \"Updated timing and details for the guided heritage walk\",\n  \"event_date\": \"2025-12-31\",\n  \"start_time\": \"16:30:00\",\n  \"end_time\": \"18:00:00\",\n  \"event_type\": \"notice\"\n}\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{Tripora}}/events/{{event_id}}",
+									"host": [
+										"{{Tripora}}"
+									],
+									"path": [
+										"events",
+										"{{event_id}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Cancel Event(Guide)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('Status code is 200 OK', function () {",
+											"    pm.response.to.have.status(200);",
+											"})",
+											"",
+											"pm.test('Response contains event data', function () {",
+											"    const jsonData = pm.response.json();",
+											"    pm.expect(jsonData).to.have.property('id');",
+											"    pm.expect(jsonData).to.have.property('is_active');",
+											"})",
+											"",
+											"pm.test('Event is_active is now false (cancelled)', function () {",
+											"    const jsonData = pm.response.json();",
+											"    pm.expect(jsonData.is_active).to.be.false;",
+											"})",
+											"",
+											"pm.test('Event ID matches the one being cancelled', function () {",
+											"    const jsonData = pm.response.json();",
+											"    const eventId = pm.collectionVariables.get('event_id');",
+											"    pm.expect(jsonData.id).to.eql(eventId);",
+											"})"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"url": {
+									"raw": "{{Tripora}}/events/{{event_id}}/cancel",
+									"host": [
+										"{{Tripora}}"
+									],
+									"path": [
+										"events",
+										"{{event_id}}",
+										"cancel"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Admin Management",
+					"item": [
+						{
+							"name": "Disable Events",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('Status code is 200 OK', function () {",
+											"    pm.response.to.have.status(200);",
+											"})",
+											"",
+											"pm.test('Response contains event data', function () {",
+											"    const jsonData = pm.response.json();",
+											"    pm.expect(jsonData).to.have.property('id');",
+											"    pm.expect(jsonData).to.have.property('is_active');",
+											"})",
+											"",
+											"pm.test('Event is_active is now false (disabled)', function () {",
+											"    const jsonData = pm.response.json();",
+											"    pm.expect(jsonData.is_active).to.be.false;",
+											"})",
+											"",
+											"pm.test('Event ID matches the one being disabled', function () {",
+											"    const jsonData = pm.response.json();",
+											"    const eventId = pm.collectionVariables.get('event_id');",
+											"    pm.expect(jsonData.id).to.eql(eventId);",
+											"})"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"url": {
+									"raw": "{{Tripora}}/events/{{event_id}}/disable",
+									"host": [
+										"{{Tripora}}"
+									],
+									"path": [
+										"events",
+										"{{event_id}}",
+										"disable"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Soft Delete",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('Status code is 200 OK', function () {",
+											"    pm.response.to.have.status(200);",
+											"})",
+											"",
+											"pm.test('Response contains event data', function () {",
+											"    const jsonData = pm.response.json();",
+											"    pm.expect(jsonData).to.have.property('id');",
+											"    pm.expect(jsonData).to.have.property('is_deleted');",
+											"})",
+											"",
+											"pm.test('Event is_deleted is now true', function () {",
+											"    const jsonData = pm.response.json();",
+											"    pm.expect(jsonData.is_deleted).to.be.true;",
+											"})",
+											"",
+											"pm.test('Event ID matches the one being deleted', function () {",
+											"    const jsonData = pm.response.json();",
+											"    const eventId = pm.collectionVariables.get('event_id');",
+											"    pm.expect(jsonData.id).to.eql(eventId);",
+											"})",
+											"",
+											"pm.test('Deleted event should also be inactive', function () {",
+											"    const jsonData = pm.response.json();",
+											"    pm.expect(jsonData.is_active).to.be.false;",
+											"})"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"url": {
+									"raw": "{{Tripora}}/events/{{event_id}}/delete",
+									"host": [
+										"{{Tripora}}"
+									],
+									"path": [
+										"events",
+										"{{event_id}}",
+										"delete"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"auth": {
+						"type": "bearer",
+						"bearer": [
+							{
+								"key": "token",
+								"value": "{{Admin Accesstoken}}",
+								"type": "string"
+							}
+						]
+					},
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {},
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {},
+								"exec": [
+									""
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "Public",
+					"item": [
+						{
+							"name": "Today Event",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('Status code is 200 OK', function () {",
+											"    pm.response.to.have.status(200);",
+											"})",
+											"",
+											"pm.test('Response is an array of events', function () {",
+											"    const jsonData = pm.response.json();",
+											"    pm.expect(jsonData).to.be.an('array');",
+											"})",
+											"",
+											"pm.test('All events are active', function () {",
+											"    const jsonData = pm.response.json();",
+											"    jsonData.forEach(event => {",
+											"        pm.expect(event.is_active).to.be.true;",
+											"    });",
+											"})",
+											"",
+											"pm.test('All events have required fields', function () {",
+											"    const jsonData = pm.response.json();",
+											"    if (jsonData.length > 0) {",
+											"        jsonData.forEach(event => {",
+											"            pm.expect(event).to.have.property('id');",
+											"            pm.expect(event).to.have.property('heritage_id');",
+											"            pm.expect(event).to.have.property('date').or.to.have.property('event_date');",
+											"        });",
+											"    }",
+											"})"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{Tripora}}/events/today",
+									"host": [
+										"{{Tripora}}"
+									],
+									"path": [
+										"events",
+										"today"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Tomorrow Event",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('Status code is 200 OK', function () {",
+											"    pm.response.to.have.status(200);",
+											"})",
+											"",
+											"pm.test('Response is an array of events', function () {",
+											"    const jsonData = pm.response.json();",
+											"    pm.expect(jsonData).to.be.an('array');",
+											"})",
+											"",
+											"pm.test('All events are active', function () {",
+											"    const jsonData = pm.response.json();",
+											"    jsonData.forEach(event => {",
+											"        pm.expect(event.is_active).to.be.true;",
+											"    });",
+											"})",
+											"",
+											"pm.test('All events have required fields', function () {",
+											"    const jsonData = pm.response.json();",
+											"    if (jsonData.length > 0) {",
+											"        jsonData.forEach(event => {",
+											"            pm.expect(event).to.have.property('id');",
+											"            pm.expect(event).to.have.property('heritage_id');",
+											"            pm.expect(event).to.have.property('date').or.to.have.property('event_date');",
+											"        });",
+											"    }",
+											"})"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{Tripora}}/events/tomorrow",
+									"host": [
+										"{{Tripora}}"
+									],
+									"path": [
+										"events",
+										"tomorrow"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "BY HERITAGE",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('Status code is 200 OK', function () {",
+											"    pm.response.to.have.status(200);",
+											"})",
+											"",
+											"pm.test('Response is an array of events', function () {",
+											"    const jsonData = pm.response.json();",
+											"    pm.expect(jsonData).to.be.an('array');",
+											"})",
+											"",
+											"pm.test('All events belong to the specified heritage', function () {",
+											"    const jsonData = pm.response.json();",
+											"    const heritageId = pm.collectionVariables.get('heritage_id');",
+											"    jsonData.forEach(event => {",
+											"        pm.expect(event.heritage_id).to.eql(heritageId);",
+											"    });",
+											"})",
+											"",
+											"pm.test('All events are active', function () {",
+											"    const jsonData = pm.response.json();",
+											"    jsonData.forEach(event => {",
+											"        pm.expect(event.is_active).to.be.true;",
+											"    });",
+											"})"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{Tripora}}/events?heritage_id={{heritage_id}}",
+									"host": [
+										"{{Tripora}}"
+									],
+									"path": [
+										"events"
+									],
+									"query": [
+										{
+											"key": "heritage_id",
+											"value": "{{heritage_id}}"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"auth": {
+						"type": "bearer",
+						"bearer": [
+							{
+								"key": "token",
+								"value": "",
+								"type": "string"
+							}
+						]
+					},
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {},
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {},
+								"exec": [
+									""
+								]
+							}
+						}
+					]
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{Guide_Accesstoken}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Booking Management",
+			"item": [
+				{
+					"name": "Tourist Booking ( AUTH and No Auth))",
+					"item": [
+						{
+							"name": "Create Heritage Booking(Tourist)",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "\n//create heritage booking\n{\n  \"heritage_id\": \"{{heritage_id}}\",\n  \"visitor_name\": \"John Tourist 11223\",\n  \"visitor_phone\": \"+91-9876543210\",\n  \"visitor_email\": \"john@example.com\",\n  \"visit_date\": \"2025-12-30\",\n  \"visit_time\": \"10:00:00\",\n  \"people_count\": 3,\n  \"notes\": \"Family visit\"\n}\n\n//create booking of  event if one it exist\n// {\n//   \"heritage_id\": \"{{heritage_id}}\",\n//   \"event_id\": \"{{event_id}}\",\n//   \"visitor_name\": \"Jane Tourist\",\n//   \"visitor_phone\": \"+91-9998887776\",\n//   \"visit_date\": \"2025-12-29\",\n//   \"people_count\": 2\n// }\n\n\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{Tripora}}/bookings",
+									"host": [
+										"{{Tripora}}"
+									],
+									"path": [
+										"bookings"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Tracking Booking",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{Tripora}}/bookings/track?reference=TRP-4FJJ77",
+									"host": [
+										"{{Tripora}}"
+									],
+									"path": [
+										"bookings",
+										"track"
+									],
+									"query": [
+										{
+											"key": "reference",
+											"value": "TRP-4FJJ77"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Tourist Booking History(auth)",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Tourist AccessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{Tripora}}/bookings/tourist/my-bookings",
+									"host": [
+										"{{Tripora}}"
+									],
+									"path": [
+										"bookings",
+										"tourist",
+										"my-bookings"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Tourist Booking(Auth)",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Tourist AccessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"heritage_id\": \"70e8d902-dc41-4b7c-a172-dd6f2cf59a3e\",\n  \"visitor_name\": \"John xxx Tourist\",\n  \"visitor_phone\": \"+91-9876543210\",\n  \"visitor_email\": \"john@example.com\",\n  \"visit_date\": \"2025-12-31\",\n  \"visit_time\": \"10:00:00\",\n  \"people_count\": 2,\n  \"notes\": \"Authenticated booking test\"\n}\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{Tripora}}/bookings/tourist",
+									"host": [
+										"{{Tripora}}"
+									],
+									"path": [
+										"bookings",
+										"tourist"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Guide Assisted Booking(Own Heritage)",
+					"item": [
+						{
+							"name": "Guide Create",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"heritage_id\": \"{{heritage_id}}\",\n  \"visitor_name\": \"Assisted Tourist\",\n  \"visitor_phone\": \"+91-8887776665\",\n  \"visit_date\": \"2025-12-31\",\n  \"people_count\": 4\n}\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{Tripora}}/bookings/guide",
+									"host": [
+										"{{Tripora}}"
+									],
+									"path": [
+										"bookings",
+										"guide"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Guide View Own Heritage Bookings",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{Tripora}}/bookings/my-heritage",
+									"host": [
+										"{{Tripora}}"
+									],
+									"path": [
+										"bookings",
+										"my-heritage"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Guide Confirms Booking",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"url": {
+									"raw": "{{Tripora}}/bookings/{{booking_id}}/confirm",
+									"host": [
+										"{{Tripora}}"
+									],
+									"path": [
+										"bookings",
+										"{{booking_id}}",
+										"confirm"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Guide Cancels Booking",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"url": {
+									"raw": "{{Tripora}}/bookings/{{booking_id}}/cancel",
+									"host": [
+										"{{Tripora}}"
+									],
+									"path": [
+										"bookings",
+										"{{booking_id}}",
+										"cancel"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"auth": {
+						"type": "bearer",
+						"bearer": [
+							{
+								"key": "token",
+								"value": "{{Guide_Accesstoken}}",
+								"type": "string"
+							}
+						]
+					},
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {},
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {},
+								"exec": [
+									""
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "Admin Control",
+					"item": [
+						{
+							"name": "Admin View All Bookings",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{Tripora}}/bookings",
+									"host": [
+										"{{Tripora}}"
+									],
+									"path": [
+										"bookings"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Admin Confirm Any Booking",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"url": {
+									"raw": "{{Tripora}}/bookings/{{booking_id}}/confirm",
+									"host": [
+										"{{Tripora}}"
+									],
+									"path": [
+										"bookings",
+										"{{booking_id}}",
+										"confirm"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Admin Cancel Any Booking",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"url": {
+									"raw": "{{Tripora}}/bookings/{{booking_id}}/cancel",
+									"host": [
+										"{{Tripora}}"
+									],
+									"path": [
+										"bookings",
+										"{{booking_id}}",
+										"cancel"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"auth": {
+						"type": "bearer",
+						"bearer": [
+							{
+								"key": "token",
+								"value": "{{Admin Accesstoken}}",
+								"type": "string"
+							}
+						]
+					},
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {},
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {},
+								"exec": [
+									""
+								]
+							}
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Payment Management",
+			"item": [
+				{
+					"name": "Guide Management",
+					"item": [
+						{
+							"name": "Create Payment",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"booking_id\": \"{{booking_id}}\",\n  \"amount\": 200,\n  \"payment_method\": \"UPI\"\n}\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{Tripora}}/payments",
+									"host": [
+										"{{Tripora}}"
+									],
+									"path": [
+										"payments"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Guide Mark Payment As Paid",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"url": {
+									"raw": "{{Tripora}}/payments/{{payment_id}}/mark-paid",
+									"host": [
+										"{{Tripora}}"
+									],
+									"path": [
+										"payments",
+										"{{payment_id}}",
+										"mark-paid"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"auth": {
+						"type": "bearer",
+						"bearer": [
+							{
+								"key": "token",
+								"value": "{{Guide_Accesstoken}}",
+								"type": "string"
+							}
+						]
+					},
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {},
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {},
+								"exec": [
+									""
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "Public",
+					"item": [
+						{
+							"name": "Check Payment Status (Tourist)",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{Tripora}}/payments/booking/{{booking_id}}",
+									"host": [
+										"{{Tripora}}"
+									],
+									"path": [
+										"payments",
+										"booking",
+										"{{booking_id}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Admin Management",
+					"item": [
+						{
+							"name": "View All Payments",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{Tripora}}/payments",
+									"host": [
+										"{{Tripora}}"
+									],
+									"path": [
+										"payments"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Mark Payment Failed",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"url": {
+									"raw": "{{Tripora}}/payments/{{payment_id}}/mark-failed",
+									"host": [
+										"{{Tripora}}"
+									],
+									"path": [
+										"payments",
+										"{{payment_id}}",
+										"mark-failed"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Mark Payment As Paid",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"url": {
+									"raw": "{{Tripora}}/payments/{{payment_id}}/mark-paid",
+									"host": [
+										"{{Tripora}}"
+									],
+									"path": [
+										"payments",
+										"{{payment_id}}",
+										"mark-paid"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"auth": {
+						"type": "bearer",
+						"bearer": [
+							{
+								"key": "token",
+								"value": "{{Admin Accesstoken}}",
+								"type": "string"
+							}
+						]
+					},
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {},
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {},
+								"exec": [
+									""
+								]
+							}
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Notification Management",
+			"item": [
+				{
+					"name": "Public (no Auth)",
+					"item": [
+						{
+							"name": "Tourist Notification Track (no Auth)",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{Tripora}}/notifications/tourist?reference={{booking_reference}}",
+									"host": [
+										"{{Tripora}}"
+									],
+									"path": [
+										"notifications",
+										"tourist"
+									],
+									"query": [
+										{
+											"key": "reference",
+											"value": "{{booking_reference}}"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"auth": {
+						"type": "noauth"
+					},
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {},
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {},
+								"exec": [
+									""
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "Guide Management",
+					"item": [
+						{
+							"name": "Guide Notification Track",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{Tripora}}/notifications/guide",
+									"host": [
+										"{{Tripora}}"
+									],
+									"path": [
+										"notifications",
+										"guide"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Mark Notifications As Read",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"url": {
+									"raw": "{{Tripora}}/notifications/{{notification_id}}/read",
+									"host": [
+										"{{Tripora}}"
+									],
+									"path": [
+										"notifications",
+										"{{notification_id}}",
+										"read"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"auth": {
+						"type": "bearer",
+						"bearer": [
+							{
+								"key": "token",
+								"value": "{{Guide_Accesstoken}}",
+								"type": "string"
+							}
+						]
+					},
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {},
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {},
+								"exec": [
+									""
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "Admin Manage",
+					"item": [
+						{
+							"name": "Admin Get Notifications",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{Tripora}}/notifications/admin",
+									"host": [
+										"{{Tripora}}"
+									],
+									"path": [
+										"notifications",
+										"admin"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"auth": {
+						"type": "bearer",
+						"bearer": [
+							{
+								"key": "token",
+								"value": "{{Admin Accesstoken}}",
+								"type": "string"
+							}
+						]
+					},
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {},
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {},
+								"exec": [
+									""
+								]
+							}
+						}
+					]
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{Guide_Accesstoken}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Profile  Management",
+			"item": [
+				{
+					"name": "Get Profile",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Tourist AccessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Tripora}}/users/me",
+							"host": [
+								"{{Tripora}}"
+							],
+							"path": [
+								"users",
+								"me"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Edit Profile",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Tourist AccessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"phone\": \"+919999999999\"\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Tripora}}/users/me",
+							"host": [
+								"{{Tripora}}"
+							],
+							"path": [
+								"users",
+								"me"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Complaint Management",
+			"item": [
+				{
+					"name": "Public (No Auth)",
+					"item": [
+						{
+							"name": "Create Complaint (Guest)",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"reference_code\": \"TRP-611HRM\",\n  \"heritage_id\": \"4b352b3f-7937-4157-81fc-dd2608f9cb1e\",\n  \"subject\": \"Poor maintenance\",\n  \"description\": \"The heritage site was not well maintained and safety boards were missing.\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{Tripora}}/complaints/",
+									"host": [
+										"{{Tripora}}"
+									],
+									"path": [
+										"complaints",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Track Complaint (Guest)",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{Tripora}}/complaints/track?reference=TRP-611HRM",
+									"host": [
+										"{{Tripora}}"
+									],
+									"path": [
+										"complaints",
+										"track"
+									],
+									"query": [
+										{
+											"key": "reference",
+											"value": "TRP-611HRM"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Tourist",
+					"item": [
+						{
+							"name": "Create Complaint",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"heritage_id\": \"4b352b3f-7937-4157-81fc-dd2608f9cb1e\",\n  \"subject\": \"Guide was unprofessional\",\n  \"description\": \"The guide provided incorrect information and was rude to visitors.\"\n}\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{Tripora}}/complaints/tourist",
+									"host": [
+										"{{Tripora}}"
+									],
+									"path": [
+										"complaints",
+										"tourist"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "View My Complaints",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{Tripora}}/complaints/my",
+									"host": [
+										"{{Tripora}}"
+									],
+									"path": [
+										"complaints",
+										"my"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"auth": {
+						"type": "bearer",
+						"bearer": [
+							{
+								"key": "token",
+								"value": "{{Tourist AccessToken}}",
+								"type": "string"
+							}
+						]
+					},
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {},
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {},
+								"exec": [
+									""
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "Guide View",
+					"item": [
+						{
+							"name": "View My Heritage Complaints",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{Tripora}}/complaints/guide/my-heritage",
+									"host": [
+										"{{Tripora}}"
+									],
+									"path": [
+										"complaints",
+										"guide",
+										"my-heritage"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"auth": {
+						"type": "bearer",
+						"bearer": [
+							{
+								"key": "token",
+								"value": "{{Guide_Accesstoken}}",
+								"type": "string"
+							}
+						]
+					},
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {},
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {},
+								"exec": [
+									""
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "Admin Control",
+					"item": [
+						{
+							"name": "Admin View All Complaints",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{Tripora}}/complaints/",
+									"host": [
+										"{{Tripora}}"
+									],
+									"path": [
+										"complaints",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Admin Update Complaint Status",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"status\": \"in_progress\"\n}\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{Tripora}}/complaints/{{complaint_id}}/status",
+									"host": [
+										"{{Tripora}}"
+									],
+									"path": [
+										"complaints",
+										"{{complaint_id}}",
+										"status"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Admin Adds Reply",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"admin_reply\": \"We have reviewed this issue and corrective action has been taken.\"\n}\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{Tripora}}/complaints/{{complaint_id}}/reply",
+									"host": [
+										"{{Tripora}}"
+									],
+									"path": [
+										"complaints",
+										"{{complaint_id}}",
+										"reply"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"auth": {
+						"type": "bearer",
+						"bearer": [
+							{
+								"key": "token",
+								"value": "{{Admin Accesstoken}}",
+								"type": "string"
+							}
+						]
+					},
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {},
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {},
+								"exec": [
+									""
+								]
+							}
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Feedback Management",
+			"item": [
+				{
+					"name": "Public Feedback",
+					"item": [
+						{
+							"name": "Create Feedback",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"reference_code\": \"TRP-4OL3WB\",\n  \"heritage_id\": \"70e8d902-dc41-4b7c-a172-dd6f2cf59a3e\",\n  \"rating\": 5,\n  \"title\": \"Great experience\",\n  \"comment\": \"The heritage site was clean and the guide explained everything very well.\"\n}\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{Tripora}}/feedbacks/",
+									"host": [
+										"{{Tripora}}"
+									],
+									"path": [
+										"feedbacks",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Public Tries To View Feedback",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{Tripora}}/feedbacks/heritage/{{heritage_id}}",
+									"host": [
+										"{{Tripora}}"
+									],
+									"path": [
+										"feedbacks",
+										"heritage",
+										"{{heritage_id}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Admin Management",
+					"item": [
+						{
+							"name": "view All Feedbacks",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{Tripora}}/feedbacks/",
+									"host": [
+										"{{Tripora}}"
+									],
+									"path": [
+										"feedbacks",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Admin Approves Feedback",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"url": {
+									"raw": "{{Tripora}}/feedbacks/{{feedback_id}}/approve",
+									"host": [
+										"{{Tripora}}"
+									],
+									"path": [
+										"feedbacks",
+										"{{feedback_id}}",
+										"approve"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"auth": {
+						"type": "bearer",
+						"bearer": [
+							{
+								"key": "token",
+								"value": "{{Admin Accesstoken}}",
+								"type": "string"
+							}
+						]
+					},
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {},
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {},
+								"exec": [
+									""
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "Tourist",
+					"item": [
+						{
+							"name": "Create Feedback",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "\n{\n  \"booking_id\": \"6436074e-2d24-4a13-afbf-dfd7a6c11b20\",\n  \"heritage_id\": \"70e8d902-dc41-4b7c-a172-dd6f2cf59a3e\",\n  \"rating\": 4,\n  \"title\": \"Good visit\",\n  \"comment\": \"Overall a nice experience, could improve signage.\"\n}\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{Tripora}}/feedbacks/tourist",
+									"host": [
+										"{{Tripora}}"
+									],
+									"path": [
+										"feedbacks",
+										"tourist"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "View Own Feedback",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{Tripora}}/feedbacks/my",
+									"host": [
+										"{{Tripora}}"
+									],
+									"path": [
+										"feedbacks",
+										"my"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"auth": {
+						"type": "bearer",
+						"bearer": [
+							{
+								"key": "token",
+								"value": "{{Tourist AccessToken}}",
+								"type": "string"
+							}
+						]
+					},
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {},
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {},
+								"exec": [
+									""
+								]
+							}
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Dashboard",
+			"item": [
+				{
+					"name": "Guide Dashboard",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Guide_Accesstoken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Tripora}}/dashboard/guide",
+							"host": [
+								"{{Tripora}}"
+							],
+							"path": [
+								"dashboard",
+								"guide"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Admin Dashboard",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Admin Accesstoken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Tripora}}/dashboard/admin",
+							"host": [
+								"{{Tripora}}"
+							],
+							"path": [
+								"dashboard",
+								"admin"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Tourist Dashboard",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Tourist AccessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Tripora}}/dashboard/tourist",
+							"host": [
+								"{{Tripora}}"
+							],
+							"path": [
+								"dashboard",
+								"tourist"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "Tripora",
+			"value": ""
+		},
+		{
+			"key": "Guide_Accesstoken",
+			"value": ""
+		},
+		{
+			"key": "Admin Accesstoken",
+			"value": ""
+		},
+		{
+			"key": "Tourist AccessToken",
+			"value": ""
+		}
+	]
+}
